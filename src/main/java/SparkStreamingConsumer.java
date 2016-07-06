@@ -21,6 +21,9 @@ public class SparkStreamingConsumer {
         SparkConf sparkConf = new SparkConf()
                 .setAppName("BenchmarkSpark")
                 .set("spark.streaming.backpressure.enabled","true")
+                // uncomment it to set physical limits of processing
+                // .set("spark.streaming.receiver.maxRate", "10000")
+                // .set("spark.streaming.kafka.maxRatePerPartition", "10000")
                 .setMaster("local");
 
         JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, Milliseconds.apply(TIME/2));
