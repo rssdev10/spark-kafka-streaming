@@ -1,0 +1,76 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'scala'
+
+apply from: "dependencies.gradle"
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use 'jcenter' for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+    mavenLocal()
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    // The production code uses the SLF4J logging API at compile time
+    compile 'org.slf4j:slf4j-api:1.7.18'
+    compile 'org.apache.logging.log4j:log4j:' + ver.log4j
+
+    compile "org.apache.spark:spark-core_${ver.scala}:${ver.spark}"
+    compile "org.apache.spark:spark-streaming_${ver.scala}:${ver.spark}"
+    compile "org.apache.spark:spark-streaming-kafka-0-8_${ver.scala}:${ver.spark}"
+
+    compile "org.apache.kafka:kafka_${ver.scala}:${ver.kafka8}"
+
+    compile "org.scala-lang:scala-library:" + ver.'scala-lib'
+    runtime "org.scala-lang:scala-compiler:" + ver.'scala-lib'
+
+    compile "com.google.code.gson:gson:$ver.gson"
+}
+
+task setup(type: JavaExec, dependsOn: [classes]) {
+    args 'setup'
+
+    // copy versions of packages
+    ver.each {
+        k,v -> environment[k] = v
+    }
+
+    main = 'Setup'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task test_data_prepare(type: JavaExec, dependsOn: classes) {
+    args 'test_data_prepare'
+
+    // copy versions of packages
+    ver.each {
+        k,v -> environment[k] = v
+    }
+
+    main = 'Setup'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task test_spark(type: JavaExec, dependsOn: classes) {
+    main = 'SparkStreamingConsumer'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task stop_all(type: JavaExec, dependsOn: classes) {
+    args 'stop_all'
+
+    // copy versions of packages
+    ver.each {
+        k,v -> environment[k] = v
+    }
+
+    main = 'Setup'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
