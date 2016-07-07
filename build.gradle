@@ -22,12 +22,21 @@ dependencies {
     compile "org.apache.spark:spark-streaming_${ver.scala}:${ver.spark}"
     compile "org.apache.spark:spark-streaming-kafka-0-8_${ver.scala}:${ver.spark}"
 
+    compile "org.apache.flink:flink-java:${ver.flink}"
+    compile "org.apache.flink:flink-streaming-java_${ver.scala}:${ver.flink}"
+    compile "org.apache.flink:flink-connector-kafka-${major(ver.kafka8)}_${ver.scala}:${ver.flink}"
+    compile "org.apache.flink:flink-streaming-connectors:${ver.flink}"
+
     compile "org.apache.kafka:kafka_${ver.scala}:${ver.kafka8}"
 
     compile "org.scala-lang:scala-library:" + ver.'scala-lib'
     runtime "org.scala-lang:scala-compiler:" + ver.'scala-lib'
 
     compile "com.google.code.gson:gson:$ver.gson"
+}
+
+def major(version) {
+    return version.split('\\.').take(2).join('.')
 }
 
 task setup(type: JavaExec, dependsOn: [classes]) {
@@ -58,6 +67,12 @@ task test_data_prepare(type: JavaExec, dependsOn: classes) {
 
 task test_spark(type: JavaExec, dependsOn: classes) {
     main = 'SparkStreamingConsumer'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task test_flink(type: JavaExec, dependsOn: classes) {
+    main = 'FlinkStreamingConsumer'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
