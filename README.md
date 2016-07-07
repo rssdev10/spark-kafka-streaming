@@ -22,6 +22,10 @@ And in other console just run:
 
    ```./gradlew test_spark```
 
+or
+
+   ```./gradlew test_flink```
+
 Stop all:
   ```./gradlew stop_all```
 
