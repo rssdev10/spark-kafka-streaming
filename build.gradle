@@ -10,6 +10,9 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
     mavenLocal()
+    maven {
+        url "http://dl.bintray.com/spark-packages/maven"
+    }
 }
 
 // In this section you declare the dependencies for your production and test code
@@ -28,6 +31,8 @@ dependencies {
     compile "org.apache.flink:flink-streaming-connectors:${ver.flink}"
 
     compile "org.apache.kafka:kafka_${ver.scala}:${ver.kafka8}"
+
+    compile "dibbhatt:kafka-spark-consumer:1.0.6"
 
     compile "org.scala-lang:scala-library:" + ver.'scala-lib'
     runtime "org.scala-lang:scala-compiler:" + ver.'scala-lib'
@@ -67,6 +72,12 @@ task test_data_prepare(type: JavaExec, dependsOn: classes) {
 
 task test_spark(type: JavaExec, dependsOn: classes) {
     main = 'SparkStreamingConsumer'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task test_spark_alternative(type: JavaExec, dependsOn: classes) {
+    main = 'SparkStreamingConsumer2'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
