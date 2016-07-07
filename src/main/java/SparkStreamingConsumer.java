@@ -12,8 +12,8 @@ import java.util.*;
 
 public class SparkStreamingConsumer {
     public static final String KAFKA_TOPIC = "spark-streaming-topic";
-    private static final Long TIME = 10 * 1000L; //milliseconds
-    private static final int delayFactor = 10000; // 0..
+    public static final Long TIME = 10 * 1000L; //milliseconds
+    public static final int delayFactor = 10000; // 0..
 
     private static Gson gson = new Gson();
 
@@ -35,7 +35,8 @@ public class SparkStreamingConsumer {
         Map<String, String> kafkaParams = new HashMap<String, String>() {
             {
                 put("metadata.broker.list", "localhost:9092");
-                put("auto.offset.reset", "smallest");
+                //put("auto.offset.reset", "smallest");
+                put("auto.offset.reset", "largest");
             }
         };
 
