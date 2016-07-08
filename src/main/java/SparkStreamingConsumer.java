@@ -28,8 +28,6 @@ public class SparkStreamingConsumer {
 
         JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, Milliseconds.apply(TIME/2));
 
-        jssc.checkpoint("_checkpoint");
-
         // see: http://spark.apache.org/docs/latest/streaming-kafka-integration.html
         Set<String> topicMap = new HashSet<>(Arrays.asList(KAFKA_TOPIC));
         Map<String, String> kafkaParams = new HashMap<String, String>() {
