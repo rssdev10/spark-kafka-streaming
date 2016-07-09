@@ -70,18 +70,20 @@ public class SparkStreamingConsumer {
                         x1._3(),
                         x1._4() + x2._4(),
                         x1._5()))
-                .map(x -> {
-                    System.out.println(
-                            "***************************************************************************"
-                            + "\nProcessing time: " + Long.toString(System.currentTimeMillis() - x._3())
-                            + "\nExpected time: " + Long.toString(TIME)
-                            + "\nProcessed messages: " + Long.toString(x._4())
-                            + "\nMessage example: " + x._1()
-                            + "\nRecovered json: " + x._2()
-                    );
-                    return x;
-                })
-                .dstream().saveAsTextFiles("/tmp/spark-test", "spark-streaming");
+                .foreachRDD(rdd -> rdd.foreachPartition(
+                    partitionOfRecords -> partitionOfRecords.forEachRemaining(x -> {
+                                System.out.println(
+                                    "***************************************************************************"
+                                    + "\nProcessing time: " + Long.toString(System.currentTimeMillis() - x._3())
+                                    + "\nExpected time: " + Long.toString(TIME)
+                                    + "\nProcessed messages: " + Long.toString(x._4())
+                                    + "\nMessage example: " + x._1()
+                                    + "\nRecovered json: " + x._2()
+                                );
+                            }
+                        )
+                    )
+                );
 
         jssc.start();
         jssc.awaitTermination();
