@@ -63,7 +63,7 @@ public class SparkStreamingConsumer {
                     return new Tuple5<String, Message, Long, Long, Integer>(
                             x._2(), message, System.currentTimeMillis(), 1L, count);
                 })
-                .window(Milliseconds.apply(TIME))
+                .window(Milliseconds.apply(TIME), Milliseconds.apply(TIME))
                 .reduce((x1, x2) -> new Tuple5<String, Message, Long, Long, Integer>(
                         x1._1(),
                         x1._2(),
